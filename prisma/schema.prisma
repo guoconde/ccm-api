@@ -1,0 +1,37 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id       Int    @id @default(autoincrement())
+  name     String @db.VarChar(60)
+  document String
+  email    String @db.VarChar(60)
+  amount   Int
+  phone    String
+
+  address   Address @relation(fields: [addressId], references: [id])
+  addressId Int
+
+  @@map("customer")
+}
+
+model Address {
+  id       Int    @id @default(autoincrement())
+  cep      String
+  street   String
+  district String
+  number   String
+  uf       String
+  city     String
+
+  Customer Customer[]
+
+  @@map("address")
+}
